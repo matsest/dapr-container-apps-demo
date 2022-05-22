@@ -2,7 +2,7 @@
 
 > Learning Azure Container Apps based on [this guide](https://docs.microsoft.com/en-us/azure/container-apps/microservices-dapr-azure-resource-manager?tabs=powershell&pivots=container-apps-bicep) from Microsoft
 
-This repo contains code to deploy the [DAPR hello-world application](https://github.com/dapr/quickstarts/tree/master/tutorials/hello-world) on [Azure Container Apps](https://docs.microsoft.com/en-us/azure/container-apps/overview) with [DAPR](https://dapr.io/) using Azure Storage Account for storing state.
+This repo contains code to deploy the [Dapr hello-world application](https://github.com/dapr/quickstarts/tree/master/tutorials/hello-world) on [Azure Container Apps](https://docs.microsoft.com/en-us/azure/container-apps/overview) with [Dapr](https://dapr.io/) using Azure Storage Account for storing state.
 
 ### Technologies
 
@@ -91,3 +91,9 @@ To clean up resources run the following command:
 ```powershell
 Remove-AzResourceGroup -Name dapr-containerapps-demo -Force
 ```
+
+## Notice
+
+The steps needed for this demo are closely based on [this guide](https://docs.microsoft.com/en-us/azure/container-apps/microservices-dapr-azure-resource-manager?tabs=powershell&pivots=container-apps-bicep) from Microsoft. The deployment logic and Bicep templates have been updated by me to fit an end-to-end demo deployment scenario and to use latest versions of tooling/providers.
+
+The application deployed is the [Dapr hello-world application](https://github.com/dapr/quickstarts/tree/master/tutorials/hello-world).
