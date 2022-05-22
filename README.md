@@ -20,17 +20,17 @@ This repo contains code to deploy the [DAPR hello-world application](https://git
 
 ### Prerequisites
 
-1. [Install/update Azure PowerShell](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=latest)
+1. [Install/update Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=latest)
 2. [Install/update Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-    - containerapp extension: `az extension add --name containerapp --upgrade` (as of May 2022 this is not available in Azure PowerShell)
-    - bicep: `az bicep install`
-3. Connect to Azure:
+    - Install `containerapp` extension: `az extension add --name containerapp --upgrade` (as of May 2022 this is not available in Azure PowerShell)
+3. [Install/update Bicep CLI](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#install-manually=)
+4. Connect to Azure:
     - Az Pwsh: `Connect-AzAccount`
     - az cli: `az login`
-4. Set Context:
+5. Set Context:
     - Az Pwsh: `Set-AzContext -SubscriptionName <subscription name>`
     - az cli: `az account set --name <subscription name>`
-4. Register resource provider: `Register-AzResourceProvider -ProviderNamespace Microsoft.App`
+6. Register resource provider: `Register-AzResourceProvider -ProviderNamespace Microsoft.App`
 
 ### Deploy
 
