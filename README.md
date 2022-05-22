@@ -22,10 +22,14 @@ This repo contains code to deploy the [DAPR hello-world application](https://git
 
 1. [Install/update Azure PowerShell](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=latest)
 2. [Install/update Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-    - containerapp extension: `az extension add --name containerapp --upgrade`
+    - containerapp extension: `az extension add --name containerapp --upgrade` (as of May 2022 this is not available in Azure PowerShell)
     - bicep: `az bicep install`
-3. Connect to Azure: `Connect-AzAccount`
-4. Set Context: `Set-AzContext -SubscriptionName <subscription name>`
+3. Connect to Azure:
+    - Az Pwsh: `Connect-AzAccount`
+    - az cli: `az login`
+4. Set Context:
+    - Az Pwsh: `Set-AzContext -SubscriptionName <subscription name>`
+    - az cli: `az account set --name <subscription name>`
 4. Register resource provider: `Register-AzResourceProvider -ProviderNamespace Microsoft.App`
 
 ### Deploy
@@ -76,4 +80,14 @@ https://nodeapp.<unique name>.canadacentral.azurecontainerapps.io/order
     "TimeGenerated": "2022-05-20T21:36:17.643Z"
   }
 ]
+```
+
+## Clean up resources
+
+The services deployed are designed for demo purposes and they are quite chatty, which will result in Azure cost (mostly compute, logging, storage). Around $2-$3 daily.
+
+To clean up resources run the following command:
+
+```powershell
+Remove-AzResourceGroup -Name dapr-containerapps-demo -Force
 ```
