@@ -2,12 +2,13 @@ param containerEnvironmentName string
 param location string = resourceGroup().location
 param storageAccountName string
 param storageContainerName string
+param managedIdentityName string
 
 var logAnalyticsWorkspaceName = '${containerEnvironmentName}-logs'
 var appInsightsName = '${containerEnvironmentName}-appins'
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
-  name: storageAccountName
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+  name: managedIdentityName
 }
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
@@ -60,12 +61,7 @@ resource environment 'Microsoft.App/managedEnvironments@2023-05-01' = {
       version: 'v1'
       ignoreErrors: false
       initTimeout: '5s'
-      secrets: [
-        {
-          name: 'storageaccountkey'
-          value: storageAccount.listKeys().keys[0].value
-        }
-      ]
+      secrets: []
       metadata: [
         {
           name: 'accountName'
@@ -76,8 +72,8 @@ resource environment 'Microsoft.App/managedEnvironments@2023-05-01' = {
           value: storageContainerName
         }
         {
-          name: 'accountKey'
-          secretRef: 'storageaccountkey'
+          name: 'azureClientId'
+          value: managedIdentity.properties.clientId
         }
       ]
       scopes: [
@@ -90,6 +86,12 @@ resource environment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 resource nodeapp 'Microsoft.App/containerApps@2023-05-01' = {
   name: 'nodeapp'
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
+  }
   properties: {
     managedEnvironmentId: environment.id
     configuration: {
@@ -109,8 +111,14 @@ resource nodeapp 'Microsoft.App/containerApps@2023-05-01' = {
         {
           image: 'dapriosamples/hello-k8s-node:latest'
           name: 'hello-k8s-node'
+          env: [
+            {
+              name: 'APP_PORT'
+              value: '3000'
+            }
+          ]
           resources: {
-            cpu: '0.5'
+            cpu: json('0.5')
             memory: '1.0Gi'
           }
         }
@@ -140,7 +148,7 @@ resource pythonapp 'Microsoft.App/containerApps@2023-05-01' = {
           image: 'dapriosamples/hello-k8s-python:latest'
           name: 'hello-k8s-python'
           resources: {
-            cpu: '0.5'
+            cpu: json('0.5')
             memory: '1.0Gi'
           }
         }

@@ -8,6 +8,7 @@ $params = @{
     LocationFromTemplate     = "canadacentral"
     containerEnvironmentName = "dapr-containerapps-env"
     storageContainerName     = "dapr-containerapps-state"
+    managedIdentityName      = "dapr-containerapps-mi"
 }
 
 Write-Host "`n🚀 Deploying container apps...(this will take a few minutes)"

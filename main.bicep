@@ -4,6 +4,7 @@ param rgName string
 param location string
 param containerEnvironmentName string
 param storageContainerName string
+param managedIdentityName string
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: rgName
@@ -16,6 +17,7 @@ module storageAccount 'modules/storage.bicep' = {
   params: {
     storageAccountName: 'stg${uniqueString(resourceGroup.id)}'
     location: location
+    managedIdentityName: managedIdentityName
   }
 }
 
@@ -27,6 +29,7 @@ module containerApps 'modules/containerapp.bicep' = {
     storageAccountName: storageAccount.outputs.name
     storageContainerName: storageContainerName
     location: location
+    managedIdentityName: storageAccount.outputs.managedIdentityName
   }
 }
 
