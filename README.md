@@ -6,7 +6,7 @@ This repo contains code to deploy the [Dapr hello-world application](https://git
 
 ### Technologies
 
-- :hammer: Azure PowerShell and AZ CLI for interaction with Azure
+- :hammer: Azure PowerShell for interaction with Azure
 - :gear: PowerShell for deployment script
 - :muscle: Bicep for Infrastructure as Code
 
@@ -20,17 +20,11 @@ This repo contains code to deploy the [Dapr hello-world application](https://git
 
 ### Prerequisites
 
-1. [Install/update Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=latest)
-2. [Install/update Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-    - Install `containerapp` extension: `az extension add --name containerapp --upgrade` (as of May 2022 this is not available in Azure PowerShell)
-3. [Install/update Bicep CLI](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#install-manually=)
-4. Connect to Azure:
-    - Az Pwsh: `Connect-AzAccount`
-    - az cli: `az login`
-5. Set Context:
-    - Az Pwsh: `Set-AzContext -SubscriptionName <subscription name>`
-    - az cli: `az account set --name <subscription name>`
-6. Register resource provider: `Register-AzResourceProvider -ProviderNamespace Microsoft.App`
+1. [Install/update Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=latest) (Tested with Az 6.15.0)
+2. [Install/update Bicep CLI](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#install-manually=) (Tested with 0.25.53)
+3. Connect to Azure: `Connect-AzAccount`
+4. Set Context: `Set-AzContext -SubscriptionName <subscription name>`
+5. Register resource provider: `Register-AzResourceProvider -ProviderNamespace Microsoft.App`
 
 ### Deploy
 

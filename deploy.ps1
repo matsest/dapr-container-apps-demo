@@ -13,7 +13,7 @@ $params = @{
 Write-Host "`n🚀 Deploying container apps...(this will take a few minutes)"
 $deploy = New-AzSubscriptionDeployment @params
 
-if ($deploy.ProvisioningState -ne "Succeeded"){
+if ($deploy.ProvisioningState -ne "Succeeded") {
     Write-Host "$($deploy | Out-String)"
     Write-Error "Something went wrong in deploy. Please revise"
 }
@@ -30,6 +30,5 @@ Write-Host "`n🔎 Querying /order API..."
 Write-Host $(Invoke-RestMethod -Uri $orderApi | ConvertTo-Json)
 
 Write-Host "`n🗒️  Querying logs from Log Analytics Workspace. Listing 5 latest entries..."
-$LOG_ANALYTICS_WORKSPACE_CLIENT_ID = (az containerapp env show --name $params.containerEnvironmentName --resource-group $params.rgName --query properties.appLogsConfiguration.logAnalyticsConfiguration.customerId --out tsv)
-$queryResults = Invoke-AzOperationalInsightsQuery -WorkspaceId $LOG_ANALYTICS_WORKSPACE_CLIENT_ID -Query "ContainerAppConsoleLogs_CL | where ContainerAppName_s == 'nodeapp' and (Log_s contains 'persisted' or Log_s contains 'order') | project ContainerAppName_s, Log_s, TimeGenerated | take 5"
+$queryResults = Invoke-AzOperationalInsightsQuery -WorkspaceId $deploy.Outputs.workspaceId.Value -Query "ContainerAppConsoleLogs_CL | where ContainerAppName_s == 'nodeapp' and (Log_s contains 'persisted' or Log_s contains 'order') | project ContainerAppName_s, Log_s, TimeGenerated | take 5"
 Write-Host "$($queryResults.Results | ConvertTo-Json)"
