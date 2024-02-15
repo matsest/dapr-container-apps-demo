@@ -6,14 +6,14 @@ param storageContainerName string
 var logAnalyticsWorkspaceName = '${containerEnvironmentName}-logs'
 var appInsightsName = '${containerEnvironmentName}-appins'
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
   name: storageAccountName
 }
 
-resource logAnalyticsWorkspace'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: logAnalyticsWorkspaceName
   location: location
-  properties: any({
+  properties: {
     retentionInDays: 30
     features: {
       searchVersion: 1
@@ -21,7 +21,7 @@ resource logAnalyticsWorkspace'Microsoft.OperationalInsights/workspaces@2021-12-
     sku: {
       name: 'PerGB2018'
     }
-  })
+  }
 }
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
@@ -34,11 +34,17 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
+resource environment 'Microsoft.App/managedEnvironments@2023-05-01' = {
   name: containerEnvironmentName
   location: location
   properties: {
-    daprAIInstrumentationKey:appInsights.properties.InstrumentationKey
+    daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
+    workloadProfiles: [
+      {
+        name: 'Consumption'
+        workloadProfileType: 'Consumption'
+      }
+    ]
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
@@ -47,7 +53,7 @@ resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
       }
     }
   }
-  resource daprComponent 'daprComponents@2022-03-01' = {
+  resource daprComponent 'daprComponents@2023-05-01' = {
     name: 'statestore'
     properties: {
       componentType: 'state.azure.blobstorage'
@@ -81,7 +87,7 @@ resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   }
 }
 
-resource nodeapp 'Microsoft.App/containerApps@2022-03-01' = {
+resource nodeapp 'Microsoft.App/containerApps@2023-05-01' = {
   name: 'nodeapp'
   location: location
   properties: {
@@ -117,7 +123,7 @@ resource nodeapp 'Microsoft.App/containerApps@2022-03-01' = {
   }
 }
 
-resource pythonapp 'Microsoft.App/containerApps@2022-03-01' = {
+resource pythonapp 'Microsoft.App/containerApps@2023-05-01' = {
   name: 'pythonapp'
   location: location
   properties: {
@@ -151,3 +157,4 @@ resource pythonapp 'Microsoft.App/containerApps@2022-03-01' = {
 }
 
 output nodeAppUri string = nodeapp.properties.configuration.ingress.fqdn
+output workspaceId string = logAnalyticsWorkspace.properties.customerId

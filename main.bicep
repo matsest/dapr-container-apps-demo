@@ -31,3 +31,4 @@ module containerApps 'modules/containerapp.bicep' = {
 }
 
 output uri string = containerApps.outputs.nodeAppUri
+output workspaceId string = containerApps.outputs.workspaceId
